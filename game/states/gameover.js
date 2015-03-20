@@ -16,7 +16,9 @@ GameOver.prototype = {
 
     this.instructionText = this.game.add.text(this.game.world.centerX, 300, 'Press any key to restart.', { font: '16px Arial', fill: '#ffffff', align: 'center'});
     this.instructionText.anchor.setTo(0.5, 0.5);
-    this.game.input.keyboard.onDownCallback = this.onDown.bind(this);
+    setTimeout(function () {
+      this.game.input.keyboard.onDownCallback = this.onDown.bind(this);
+    }.bind(this), 1000);
   },
   onDown: function () {
     this.game.input.keyboard.onDownCallback = null;

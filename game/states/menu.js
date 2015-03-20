@@ -26,6 +26,7 @@ Menu.prototype = {
 
     this.game.add.tween(this.titleText).to({alpha: 1.0}, 1000, Phaser.Easing.Linear.NONE, true, 500);
     this.game.add.tween(this.instructionsText).to({alpha: 1.0}, 1000, Phaser.Easing.Linear.NONE, true, 1200);
+    
     this.game.input.keyboard.onDownCallback = this.onDown.bind(this);
   },
   onDown: function () {
