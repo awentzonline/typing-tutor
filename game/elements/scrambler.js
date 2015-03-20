@@ -5,6 +5,7 @@ function Scrambler(game, x, y) {
   Phaser.Sprite.call(this, game, x, y, 'scrambler_walk');
   this.animations.add('walk', []);
   this.animations.play('walk', 10, true);
+  this.anchor.set(0.5, 0.2);
   this.fpsMax = 20;
   this.fpsMin = 5;
   this.speedMax = 300;

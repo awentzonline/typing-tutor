@@ -18,7 +18,7 @@ Menu.prototype = {
     this.titleText.alpha = 0;
 
     this.instructionsText = this.game.add.text(
-      this.game.world.centerX, 400, 'Press any key to start typing!',
+      this.game.world.centerX, 400, 'Type to save the baby\nPress any key to start',
       {font: '16px Arial', fill: '#ffffff', align: 'center'}
     );
     this.instructionsText.anchor.setTo(0.5, 0.5);

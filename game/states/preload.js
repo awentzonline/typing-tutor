@@ -14,6 +14,7 @@ Preload.prototype = {
     this.load.setPreloadSprite(this.asset);
     this.load.spritesheet('scrambler_walk', 'assets/scrambler_walk.png', 200, 121);
     this.load.image('background0', 'assets/background0.jpg');
+    this.load.image('baby0', 'assets/baby0.png');
     this.load.bitmapFont('font', 'assets/font.png', 'assets/font.fnt');
   },
   create: function() {
