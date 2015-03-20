@@ -6,6 +6,7 @@ function Scrambler(game, x, y) {
   Phaser.Sprite.call(this, game, x, y, 'scrambler_walk');
   this.animations.add('walk', []);
   this.animations.play('walk', 10, true);
+  this.anchor.set(0.5, 0.2);
   this.fpsMax = 20;
   this.fpsMin = 5;
   this.speedMax = 300;
@@ -107,16 +108,16 @@ GameOver.prototype = {
     this.titleText = this.game.add.text(this.game.world.centerX,100, 'Game Over!', style);
     this.titleText.anchor.setTo(0.5, 0.5);
 
-    this.congratsText = this.game.add.text(this.game.world.centerX, 200, 'You Win!', { font: '32px Arial', fill: '#ffffff', align: 'center'});
+    this.congratsText = this.game.add.text(this.game.world.centerX, 200, 'You Lost!', { font: '32px Arial', fill: '#ffffff', align: 'center'});
     this.congratsText.anchor.setTo(0.5, 0.5);
 
-    this.instructionText = this.game.add.text(this.game.world.centerX, 300, 'Click To Play Again', { font: '16px Arial', fill: '#ffffff', align: 'center'});
+    this.instructionText = this.game.add.text(this.game.world.centerX, 300, 'Press any key to restart.', { font: '16px Arial', fill: '#ffffff', align: 'center'});
     this.instructionText.anchor.setTo(0.5, 0.5);
+    this.game.input.keyboard.onDownCallback = this.onDown.bind(this);
   },
-  update: function () {
-    if(this.game.input.activePointer.justPressed()) {
-      this.game.state.start('play');
-    }
+  onDown: function () {
+    this.game.input.keyboard.onDownCallback = null;
+    this.game.state.start('play');
   }
 };
 module.exports = GameOver;
@@ -142,7 +143,7 @@ Menu.prototype = {
     this.titleText.alpha = 0;
 
     this.instructionsText = this.game.add.text(
-      this.game.world.centerX, 400, 'Press any key to start typing!',
+      this.game.world.centerX, 400, 'Type to save the baby\nPress any key to start',
       {font: '16px Arial', fill: '#ffffff', align: 'center'}
     );
     this.instructionsText.anchor.setTo(0.5, 0.5);
@@ -170,10 +171,15 @@ function Play() {}
 
 Play.prototype = {
   create: function() {
+    this.game.physics.startSystem(Phaser.Physics.ARCADE);
+    
     this.words = 'Of the pleasures and pains of opium much has been written. The ecstasies and horrors of De Quincey and the paradis artificiels of Baudelaire are preserved and interpreted with an art which makes them immortal, and the world knows well the beauty, the terror and the mystery of those obscure realms into which the inspired dreamer is transported. But much as has been told, no man has yet dared intimate the nature of the phantasms thus unfolded to the mind, or hint at the direction of the unheard-of roads along whose ornate and exotic course the partaker of the drug is so irresistibly borne. De Quincey was drawn back into Asia, that teeming land of nebulous shadows whose hideous antiquity is so impressive that "the vast age of the race and name overpowers the sense of youth in the individual," but farther than that he dared not go. Those who have gone farther seldom returned, and even when they have, they have been either silent or quite mad. I took opium but once -- in the year of the plague, when doctors sought to deaden the agonies they could not cure. There was an overdose -- my physician was worn out with horror and exertion -- and I travelled very far indeed. In the end I returned and lived, but my nights are filled with strange memories, nor have I ever permitted a doctor to give me opium again.'
     this.backgroundSprite = this.game.add.sprite(0, 0, 'background0');
+    // baby
+    this.baby = this.game.add.sprite(this.game.width * 0.8, this.game.height * 0.8, 'baby0')
+    this.baby.anchor.set(0.5, 0);
+    this.game.physics.arcade.enable(this.baby);
     // scrambler
-    this.game.physics.startSystem(Phaser.Physics.ARCADE);
     this.creature = null;
     // text stuff
     this.textQueue = new TextQueue(this.words);
@@ -185,9 +191,9 @@ Play.prototype = {
   },
   update: function() {
     if (this.creature) {
-      if (this.creature.x > this.game.width) {
-        this.creature.kill();
-      }
+      this.game.physics.arcade.collide(this.creature, this.baby, function (creature, baby) {
+        this.game.state.start('gameover');
+      }.bind(this));
     } else {
       this.spawnCreature();
     }
@@ -203,6 +209,7 @@ Play.prototype = {
       var letter = this.textInput[i];
       if (letter == visibleText[0]) {
         visibleText = visibleText.substr(1, visibleText.length);
+        this.hitCreature();
       }
     }
     this.textInput = '';
@@ -219,18 +226,22 @@ Play.prototype = {
   spawnCreature: function () {
     if (!this.creature) {
       this.creature = new Scrambler(
-        this.game, 0, this.game.height * 0.7
+        this.game, 0, this.game.height * 0.8
       );
-      this.creature.x = -this.creature.width;
       this.game.add.existing(this.creature);
-      this.game.physics.arcade.enable(this.creature);
-      this.creature.body.velocity.x = 200;
     } else {
-      this.creature.revive(100);
-      this.game.physics.arcade.enable(this.creature);
-      this.creature.x = -this.creature.width;
-      this.creature.body.velocity.x = 200;
+      this.creature.reset();
     }
+    this.game.physics.arcade.enable(this.creature);
+    this.creature.x = -this.creature.width;
+    this.creature.body.acceleration.x = 70;
+  },
+  hitCreature: function () {
+    var maxReverseVelocity = -10;
+    var vx = this.creature.body.velocity.x - 15;
+
+    this.creature.body.velocity.x = Math.max(maxReverseVelocity, vx);
+
   },
   onKeyPress: function (letter) {
     this.textInput += letter;
@@ -256,6 +267,7 @@ Preload.prototype = {
     this.load.setPreloadSprite(this.asset);
     this.load.spritesheet('scrambler_walk', 'assets/scrambler_walk.png', 200, 121);
     this.load.image('background0', 'assets/background0.jpg');
+    this.load.image('baby0', 'assets/baby0.png');
     this.load.bitmapFont('font', 'assets/font.png', 'assets/font.fnt');
   },
   create: function() {
