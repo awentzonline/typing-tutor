@@ -23,6 +23,9 @@ Play.prototype = {
       this.game.width * 0.4, this.game.height * 0.4, 'font', this.textQueue.fetchWords(10) + ' ', 32
     );
     this.textInput = '';
+    // dont let the spacebar push us around
+    this.spaceKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    this.spaceKey.onDown.add(this.onSpacePress.bind(this));
     this.game.input.keyboard.onPressCallback = this.onKeyPress.bind(this);
   },
   update: function() {
@@ -76,6 +79,9 @@ Play.prototype = {
     var maxReverseVelocity = -10;
     var vx = this.creature.body.velocity.x - 15;
     this.creature.body.velocity.x = Math.max(maxReverseVelocity, vx);
+  },
+  onSpacePress: function () {
+    this.onKeyPress(' ');
   },
   onKeyPress: function (letter) {
     this.textInput += letter;
