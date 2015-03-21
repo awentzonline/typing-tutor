@@ -17,6 +17,7 @@ Play.prototype = {
   create: function() {
     this.game.physics.startSystem(Phaser.Physics.ARCADE);
     this.level = JSON.parse(this.game.cache.getText('levelData'));
+    this.typewriterSound = this.game.add.sound('typewriter');
     this.backgroundSprite = this.game.add.sprite(0, 0, 'background0');
     this.scoreText = this.game.add.bitmapText(
       this.game.width * 0.5, this.game.height * 0.05, 'font', '0', 64
@@ -114,6 +115,8 @@ Play.prototype = {
     var vx = this.creature.body.velocity.x - 16;
     this.creature.body.velocity.x = Math.max(maxReverseVelocity, vx);
     this.game.score += 1;
+    this.typewriterSound.stop();
+    this.typewriterSound.play();
   },
   onSpacePress: function () {
     this.onKeyPress(' ');

@@ -7,6 +7,9 @@ Menu.prototype = {
 
   },
   create: function() {
+    var music = this.game.add.audio('background-music', 1.0, true);
+    music.play();
+
     this.backgroundSprite = this.game.add.sprite(0, 0, 'background0');
     
     var style = { font: '65px Arial', fill: '#ffffff', align: 'center'};
