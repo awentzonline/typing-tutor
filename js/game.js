@@ -293,7 +293,6 @@ Play.prototype = {
     var vx = this.creature.body.velocity.x - 16;
     this.creature.body.velocity.x = Math.max(maxReverseVelocity, vx);
     this.game.score += 1;
-    this.typewriterSound.stop();
     this.typewriterSound.play();
   },
   onSpacePress: function () {
