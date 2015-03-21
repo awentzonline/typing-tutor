@@ -31,7 +31,7 @@ Menu.prototype = {
   },
   onDown: function () {
     this.game.input.keyboard.onDownCallback = null;
-    this.game.state.start('play');
+    this.game.state.start('play', true, false, [1]);
   }
 };
 

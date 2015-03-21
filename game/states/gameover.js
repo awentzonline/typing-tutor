@@ -16,7 +16,7 @@ GameOver.prototype = {
 
     this.congratsText = this.game.add.text(
       this.game.world.centerX, 200,
-      'You basically killed that baby\nwith your awful typing.\nYou only typed ' + this.score + ' letters.',
+      'You basically killed that baby\nwith your awful typing.\nYou only typed ' + this.game.score + ' letters.',
       { font: '32px Arial', fill: '#ffffff', align: 'center'});
     this.congratsText.anchor.setTo(0.5, 0.5);
 
@@ -28,7 +28,8 @@ GameOver.prototype = {
   },
   onDown: function () {
     this.game.input.keyboard.onDownCallback = null;
-    this.game.state.start('play');
+    this.game.score = 0;
+    this.game.state.start('play', true, false, [1]);
   }
 };
 module.exports = GameOver;
