@@ -142,6 +142,9 @@ Menu.prototype = {
 
   },
   create: function() {
+    var music = this.game.add.audio('background-music', 1.0, true);
+    music.play();
+
     this.backgroundSprite = this.game.add.sprite(0, 0, 'background0');
     
     var style = { font: '65px Arial', fill: '#ffffff', align: 'center'};
@@ -192,6 +195,7 @@ Play.prototype = {
   create: function() {
     this.game.physics.startSystem(Phaser.Physics.ARCADE);
     this.level = JSON.parse(this.game.cache.getText('levelData'));
+    this.typewriterSound = this.game.add.sound('typewriter');
     this.backgroundSprite = this.game.add.sprite(0, 0, 'background0');
     this.scoreText = this.game.add.bitmapText(
       this.game.width * 0.5, this.game.height * 0.05, 'font', '0', 64
@@ -240,7 +244,6 @@ Play.prototype = {
     }
     if (this.currentText.text.trim().length == 0) {
       var nextLevelId = (this.level.id % NUM_LEVELS) + 1;
-      console.log(nextLevelId);
       this.game.state.start('play', true, false, [nextLevelId]);
     }
     this.updateText();
@@ -290,6 +293,8 @@ Play.prototype = {
     var vx = this.creature.body.velocity.x - 16;
     this.creature.body.velocity.x = Math.max(maxReverseVelocity, vx);
     this.game.score += 1;
+    this.typewriterSound.stop();
+    this.typewriterSound.play();
   },
   onSpacePress: function () {
     this.onKeyPress(' ');
@@ -324,6 +329,8 @@ Preload.prototype = {
     this.load.image('background0', 'assets/background0.jpg');
     this.load.image('baby0', 'assets/baby0.png');
     this.load.bitmapFont('font', 'assets/font.png', 'assets/font.fnt');
+    this.load.audio('background-music', ['assets/bwv773.mp3', 'assets/bwv773.ogg']);
+    this.load.audio('typewriter', ['assets/typewriter.mp3', 'assets/typewriter.ogg']);
   },
   create: function() {
     this.asset.cropEnabled = false;
