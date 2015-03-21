@@ -18,6 +18,7 @@ Preload.prototype = {
     this.load.bitmapFont('font', 'assets/font.png', 'assets/font.fnt');
     this.load.audio('background-music', ['assets/bwv773.mp3', 'assets/bwv773.ogg']);
     this.load.audio('typewriter', ['assets/typewriter.mp3', 'assets/typewriter.ogg']);
+    this.load.audio('squish', ['assets/squish.mp3', 'assets/squish.ogg']);
   },
   create: function() {
     this.asset.cropEnabled = false;

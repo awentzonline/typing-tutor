@@ -120,6 +120,10 @@ GameOver.prototype = {
 
     this.instructionText = this.game.add.text(this.game.world.centerX, 300, 'Press any key to restart.', { font: '16px Arial', fill: '#ffffff', align: 'center'});
     this.instructionText.anchor.setTo(0.5, 0.5);
+    
+    this.deathSound = this.game.add.audio('squish');
+    this.deathSound.play();
+    
     setTimeout(function () {
       this.game.input.keyboard.onDownCallback = this.onDown.bind(this);
     }.bind(this), 1000);
@@ -127,6 +131,7 @@ GameOver.prototype = {
   onDown: function () {
     this.game.input.keyboard.onDownCallback = null;
     this.game.score = 0;
+    this.deathSound.stop();
     this.game.state.start('play', true, false, [1]);
   }
 };
@@ -330,6 +335,7 @@ Preload.prototype = {
     this.load.bitmapFont('font', 'assets/font.png', 'assets/font.fnt');
     this.load.audio('background-music', ['assets/bwv773.mp3', 'assets/bwv773.ogg']);
     this.load.audio('typewriter', ['assets/typewriter.mp3', 'assets/typewriter.ogg']);
+    this.load.audio('squish', ['assets/squish.mp3', 'assets/squish.ogg']);
   },
   create: function() {
     this.asset.cropEnabled = false;
