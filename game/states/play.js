@@ -57,15 +57,19 @@ Play.prototype = {
     this.titleText.text = 'Begin typing'
     this.game.add.tween(this.titleText).to({alpha: 0}, 1000, Phaser.Easing.Linear.NONE, true, 1000);
     this.spawnCreature();
+    this.roundStartTime = this.game.time.time;
   },
   update: function() {
     if (this.creature) {
       this.game.physics.arcade.collide(this.creature, this.baby, function (creature, baby) {
+        this.game.elapsedTime += this.game.time.time - this.roundStartTime;
+        console.log([this.roundStartTime, this.game.time.time, this.game.elapsedTime])
         this.game.state.start('gameover');
       }.bind(this));
     }
     if (this.currentText.text.trim().length == 0) {
       var nextLevelId = (this.level.id % NUM_LEVELS) + 1;
+      this.game.elapsedTime += this.game.time.time - this.roundStartTime;
       this.game.state.start('play', true, false, [nextLevelId]);
     }
     this.updateText();
