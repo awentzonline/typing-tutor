@@ -115,7 +115,7 @@ GameOver.prototype = {
 
     this.congratsText = this.game.add.text(
       this.game.world.centerX, 200,
-      'You basically killed that baby\nwith your awful typing.\nYou only typed ' + this.game.score + ' letters at ' + wordRate + ' words/min.',
+      'You basically killed that baby\nwith your awful typing.\n' + this.game.score + ' letters at ' + wordRate + ' words per minute.',
       { font: '32px Arial', fill: '#ffffff', align: 'center'});
     this.congratsText.anchor.setTo(0.5, 0.5);
 
