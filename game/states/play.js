@@ -63,7 +63,6 @@ Play.prototype = {
     if (this.creature) {
       this.game.physics.arcade.collide(this.creature, this.baby, function (creature, baby) {
         this.game.elapsedTime += this.game.time.time - this.roundStartTime;
-        console.log([this.roundStartTime, this.game.time.time, this.game.elapsedTime])
         this.game.state.start('gameover');
       }.bind(this));
     }
